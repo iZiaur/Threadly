@@ -45,6 +45,7 @@ const storage=multer.memoryStorage();
 
 const upload=multer({storage:storage})
 
+<<<<<<< HEAD
 // Upload endpoint — uploads to Cloudinary instead of local disk
 app.post('/upload',upload.single('product'),async (req,res)=>{
     try{
@@ -62,6 +63,13 @@ app.post('/upload',upload.single('product'),async (req,res)=>{
         console.error("Upload error:", error);
         res.status(500).json({success:0, message:"Image upload failed"});
     }
+=======
+app.post('/upload',upload.single('product'),(req,res)=>{
+    res.json({
+        success:1,
+        image_url:`http://localhost:${PORT}/images/${req.file.filename}`
+    })
+>>>>>>> ebdaa90 (fixed route)
 })
 
 
@@ -142,11 +150,14 @@ app.post('/addproduct',async (req,res)=>{
 
 app.post("/removeproduct",async(req,res)=>{
    let obj= await Product.findOneAndDelete({id:req.body.id});
-    res.json({
-        success:1,
-        name:obj.name
-    }
-    )
+   if (obj) {
+        res.json({
+            success:1,
+            name:obj.name
+        })
+   } else {
+        res.json({ success:0, errors: "Product not found" })
+   }
 })
 
 
@@ -190,9 +201,15 @@ app.post("/signup",async (req,res)=>{
     }
 
     let cart={};
+<<<<<<< HEAD
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     
+=======
+    for(let i=0;i<=301;i++){
+        cart[i]=0;
+    }
+>>>>>>> ebdaa90 (fixed route)
     const user=new Users({
         name:req.body.username,
         email:req.body.email,
@@ -253,8 +270,14 @@ app.get("/popularinwomen",async (req,res)=>{
     let products=await Product.find({category:"women"});
     let popularinwomen=products.slice(0,4);
     res.send(popularinwomen);
+})
 
-
+//api for related products
+app.post("/relatedproducts", async (req, res) => {
+    const { category } = req.body;
+    let products = await Product.find({category});
+    let relatedproducts = products.slice(0, 4);
+    res.send(relatedproducts);
 })
 
 // Creating Middleware to fetch user
@@ -280,7 +303,7 @@ app.post("/addtocart",fetchUser,async (req,res)=>{
     let itemId = req.body.itemId;
     userData.cartData[itemId] = (userData.cartData[itemId] || 0) + 1;
     await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
-    res.send("Added")
+    res.json({success:true, message:"Added"})
 })
 
 // Cart Api to remove product from cart data
@@ -296,7 +319,11 @@ app.post("/removefromcart",fetchUser,async (req,res)=>{
         }
         await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
     }
+<<<<<<< HEAD
     res.send("Removed")
+=======
+    res.json({success:true, message:"Removed"})
+>>>>>>> ebdaa90 (fixed route)
 })
 
 

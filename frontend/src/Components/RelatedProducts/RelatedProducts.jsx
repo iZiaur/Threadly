@@ -1,7 +1,28 @@
 import "./RelatedProducts.css";
-import data_product from "../Assets/data"
 import Item from "../Item/Item";
-function RelatedProducts() {
+import { useEffect, useState, useContext } from "react";
+import { ShopContext } from "../../Context/ShopContext";
+
+function RelatedProducts({ category }) {
+  const [data_product, setdata_product] = useState([]);
+  const { setServerDown } = useContext(ShopContext);
+
+  useEffect(() => {
+      fetch('http://localhost:4000/relatedproducts', {
+          method: 'POST',
+          headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ category })
+      })
+      .then((response) => response.json())
+      .then((data) => {
+          setdata_product(data);
+          setServerDown(false);
+      })
+      .catch(() => setServerDown(true));
+  }, [category]);
   return (
     <div className="related-products">
       <h1>Related Products</h1>

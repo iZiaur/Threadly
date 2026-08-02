@@ -15,7 +15,7 @@ function Navbar(){
 
 
     let[menu,setmenu]=useState("Shop");
-    const {getTotalCartItems}=useContext(ShopContext);
+    const {getTotalCartItems, setServerDown}=useContext(ShopContext);
     const[user,setuser]=useState("");
     const menuref=useRef();
 
@@ -37,7 +37,11 @@ function Navbar(){
             }
         })
         .then((response) => response.text()) // ← important
-        .then((data) => setuser(data));
+        .then((data) => {
+            setuser(data);
+            setServerDown(false);
+        })
+        .catch((error) => setServerDown(true));
 
     }
 

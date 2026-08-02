@@ -1,10 +1,16 @@
 import "./css/LoginSignup.css"
+<<<<<<< HEAD
 import { useState } from "react";
 import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
+=======
+import { useState, useContext } from "react";
+import { ShopContext } from "../Context/ShopContext";
+>>>>>>> ebdaa90 (fixed route)
 function LoginSignUp(){
     const[state,setstate]=useState("Login");
+    const { setServerDown } = useContext(ShopContext);
     const [formdata,setformdata]=useState({
         username:"",
         password:"",
@@ -12,6 +18,7 @@ function LoginSignUp(){
     })
 
     async function login(){
+<<<<<<< HEAD
         const response = await fetch(`${API_URL}/login`, {
             method: "POST",
             headers: {
@@ -20,11 +27,26 @@ function LoginSignUp(){
             },
             body: JSON.stringify(formdata),
         });
+=======
+        try {
+            const response = await fetch("http://localhost:4000/login", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formdata),
+            });
+>>>>>>> ebdaa90 (fixed route)
 
-        const responseData = await response.json();
+            const responseData = await response.json();
+            setServerDown(false);
 
-       
+            if (responseData.success) {
+                localStorage.setItem("auth-token", responseData.token);
+                console.log("Response:", responseData);
 
+<<<<<<< HEAD
         if (responseData.success) {
             localStorage.setItem("auth-token", responseData.token);
             localStorage.setItem("login-time", new Date().getTime().toString());
@@ -35,6 +57,17 @@ function LoginSignUp(){
             
         } else {
             toast.error(responseData.message || "Invalid Credentials");
+=======
+                // Redirect
+                window.location.href = "/";
+                
+            } else {
+                alert(responseData.message || "Invalid Credentials");
+            }
+        } catch (error) {
+            setServerDown(true);
+            alert("Backend Server is currently down or unreachable.");
+>>>>>>> ebdaa90 (fixed route)
         }
     }
     
@@ -48,6 +81,7 @@ function LoginSignUp(){
 
 
      async function signup(){
+<<<<<<< HEAD
     
         const response = await fetch(`${API_URL}/signup`, {
             method: "POST",
@@ -57,11 +91,26 @@ function LoginSignUp(){
             },
             body: JSON.stringify(formdata),
         });
+=======
+        try {
+            const response = await fetch("http://localhost:4000/signup", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formdata),
+            });
+>>>>>>> ebdaa90 (fixed route)
 
-        const responseData = await response.json();
+            const responseData = await response.json();
+            setServerDown(false);
 
-       
+            if (responseData.success) {
+                localStorage.setItem("auth-token", responseData.token);
+                console.log("Response:", responseData);
 
+<<<<<<< HEAD
         if (responseData.success) {
             localStorage.setItem("auth-token", responseData.token);
             localStorage.setItem("login-time", new Date().getTime().toString());
@@ -72,6 +121,17 @@ function LoginSignUp(){
             toast.success(`Welcome ${formdata.username}`)
         } else {
             toast.error(responseData.message || "Signup failed");
+=======
+                // Redirect
+                window.location.href = "/";
+                alert(`Welcome ${formdata.username}`)
+            } else {
+                alert(responseData.message || "Signup failed");
+            }
+        } catch (error) {
+            setServerDown(true);
+            alert("Backend Server is currently down or unreachable.");
+>>>>>>> ebdaa90 (fixed route)
         }
     }
 

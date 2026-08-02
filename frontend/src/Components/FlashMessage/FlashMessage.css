@@ -1,0 +1,24 @@
+.flash-message {
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.flash-message.error {
+    background-color: #ff4d4f;
+}
+
+.flash-message.success {
+    background-color: #52c41a;
+}
+
+.flash-message p {
+    margin: 0;
+    padding: 0;
+}
