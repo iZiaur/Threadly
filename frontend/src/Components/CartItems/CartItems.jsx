@@ -10,7 +10,7 @@ function CartItems(){
     const {getTotalCartAmount,all_product,cartItems,addToCart,removeFromCart} = useContext(ShopContext);
     const [promo, setPromo] = useState('');
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         if (!localStorage.getItem('auth-token')) {
             toast.error("Please login first to proceed to checkout!");
             setTimeout(() => {
@@ -21,8 +21,34 @@ function CartItems(){
         
         if (getTotalCartAmount() === 0) {
             toast.error("Your cart is empty!");
-        } else {
-            toast.info("Redirecting to secure payment gateway...");
+            return;
+        } 
+        
+        toast.info("Processing order...");
+        const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
+        try {
+            const response = await fetch(`${API_URL}/checkout`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "auth-token": `${localStorage.getItem("auth-token")}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ totalAmount: getTotalCartAmount() })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                toast.success("Order placed successfully!");
+                // Reload to clear frontend cart since backend cart was cleared
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                toast.error(data.errors || "Checkout failed");
+            }
+        } catch (error) {
+            toast.error("Server unreachable during checkout.");
         }
     };
 

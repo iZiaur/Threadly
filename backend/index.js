@@ -7,6 +7,7 @@ const path=require("path");
 const cors=require("cors");
 const bcrypt=require("bcrypt");
 const cloudinary=require("cloudinary").v2;
+const AWS=require("aws-sdk");
 app.use(express.json());
 
 app.use(cors())
@@ -18,6 +19,14 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// AWS Configuration
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION || 'us-east-1'
+});
+const sns = new AWS.SNS();
 
 // Connecting with mongodb
 const username = process.env.MONGO_USERNAME;
@@ -325,6 +334,45 @@ app.post("/getuser",fetchUser,async(req,res)=>{
     let userData=await Users.findOne({_id:req.user.id});
     res.send(userData.name);
 })
+
+// Checkout API (AWS Event-Driven Integration)
+app.post("/checkout", fetchUser, async (req, res) => {
+    try {
+        let userData = await Users.findOne({_id: req.user.id});
+        
+        // Prepare the order event payload
+        const orderEvent = {
+            userId: req.user.id,
+            username: userData.name,
+            email: userData.email,
+            cart: userData.cartData,
+            totalAmount: req.body.totalAmount, 
+            orderDate: new Date().toISOString()
+        };
+
+        // Publish to AWS SNS
+        if (process.env.AWS_SNS_TOPIC_ARN) {
+            const params = {
+                Message: JSON.stringify(orderEvent),
+                TopicArn: process.env.AWS_SNS_TOPIC_ARN,
+                Subject: `New Order Placed by ${userData.name}`
+            };
+            await sns.publish(params).promise();
+            console.log("Successfully published Order Placed event to SNS");
+        } else {
+            console.log("AWS_SNS_TOPIC_ARN not provided in .env, skipping SNS publish (Local mode)");
+        }
+
+        // Clear the user's cart after successful checkout
+        userData.cartData = {};
+        await Users.findOneAndUpdate({_id: req.user.id}, {cartData: {}});
+
+        res.json({ success: true, message: "Order placed successfully!" });
+    } catch (error) {
+        console.error("Checkout Error:", error);
+        res.status(500).json({ success: false, errors: "Failed to process checkout: " + error.message });
+    }
+});
 
 // Admin Schema
 
