@@ -45,7 +45,6 @@ const storage=multer.memoryStorage();
 
 const upload=multer({storage:storage})
 
-<<<<<<< HEAD
 // Upload endpoint — uploads to Cloudinary instead of local disk
 app.post('/upload',upload.single('product'),async (req,res)=>{
     try{
@@ -63,13 +62,6 @@ app.post('/upload',upload.single('product'),async (req,res)=>{
         console.error("Upload error:", error);
         res.status(500).json({success:0, message:"Image upload failed"});
     }
-=======
-app.post('/upload',upload.single('product'),(req,res)=>{
-    res.json({
-        success:1,
-        image_url:`http://localhost:${PORT}/images/${req.file.filename}`
-    })
->>>>>>> ebdaa90 (fixed route)
 })
 
 
@@ -201,15 +193,12 @@ app.post("/signup",async (req,res)=>{
     }
 
     let cart={};
-<<<<<<< HEAD
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     
-=======
     for(let i=0;i<=301;i++){
         cart[i]=0;
     }
->>>>>>> ebdaa90 (fixed route)
     const user=new Users({
         name:req.body.username,
         email:req.body.email,
@@ -319,11 +308,7 @@ app.post("/removefromcart",fetchUser,async (req,res)=>{
         }
         await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
     }
-<<<<<<< HEAD
-    res.send("Removed")
-=======
     res.json({success:true, message:"Removed"})
->>>>>>> ebdaa90 (fixed route)
 })
 
 
@@ -383,3 +368,5 @@ app.get("/admin/analytics", async (req, res) => {
         res.status(500).json({ success: false, errors: "Server error" });
     }
 });
+
+module.exports = app;
