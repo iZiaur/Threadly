@@ -20,13 +20,8 @@ function Product(){
         <div>
             <Breadcrum product={product}/>
            < ProductDisplay product={product}/>
-<<<<<<< HEAD
            <DescriptionBox product={product}/>
-           <RelatedProducts/>
-=======
-           <DescriptionBox/>
            <RelatedProducts category={product.category}/>
->>>>>>> ebdaa90 (fixed route)
         </div>
     )
  

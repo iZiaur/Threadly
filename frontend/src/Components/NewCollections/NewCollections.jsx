@@ -11,17 +11,13 @@ function NewCollections(){
     const { setServerDown } = useContext(ShopContext);
 
     useEffect(()=>{
-<<<<<<< HEAD
-        fetch(`${API_URL}/newcollections`).then((response)=>response.json()).then((data)=>setnew_collection(data));
-=======
-        fetch('http://localhost:4000/newcollections')
+        fetch(`${API_URL}/newcollections`)
             .then((response)=>response.json())
             .then((data)=>{
                 setnew_collection(data);
                 setServerDown(false);
             })
             .catch((error)=>setServerDown(true));
->>>>>>> ebdaa90 (fixed route)
     },[])
     return(
         <div id="new-collections" className="new-collections">

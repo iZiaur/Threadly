@@ -12,17 +12,13 @@ function Popular(){
     const { setServerDown } = useContext(ShopContext);
 
     useEffect(()=>{
-<<<<<<< HEAD
-        fetch(`${API_URL}/popularinwomen`).then((response)=>response.json()).then((data)=>setdata_product(data));
-=======
-        fetch('http://localhost:4000/popularinwomen')
+        fetch(`${API_URL}/popularinwomen`)
             .then((response)=>response.json())
             .then((data)=>{
                 setdata_product(data);
                 setServerDown(false);
             })
             .catch((error)=>setServerDown(true));
->>>>>>> ebdaa90 (fixed route)
     },[])
 return(
     <div className="popular">

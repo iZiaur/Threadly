@@ -44,26 +44,17 @@ function App() {
   return <div>
     
     <BrowserRouter>
-<<<<<<< HEAD
     <ToastContainer />
-=======
     <FlashMessage />
->>>>>>> ebdaa90 (fixed route)
     <Navbar/>
     <Routes>
       <Route path="/" element={<Shop/>}></Route>
       <Route path="/mens" element={<ShopCategory banner={men_banner}category="men"/>}></Route>
       <Route path="/womens" element={<ShopCategory banner={women_banner} category="women"/>}></Route>
       <Route path="/kids" element={<ShopCategory banner={kids_banner} category="kid"/>}></Route>
-<<<<<<< HEAD
       <Route path="/search" element={<Search/>}></Route>
-      <Route path="/product" element={<Product/>}>
-      <Route path=":productId" element={<Product/>}></Route>
-      </Route>
-=======
       <Route path="/product" element={<Product/>}></Route>
       <Route path="/product/:productId" element={<Product/>}></Route>
->>>>>>> ebdaa90 (fixed route)
       <Route path="/cart" element={<  Cart/>}></Route>
       <Route path="/login" element={<LoginSignUp/>}></Route>
     </Routes>
