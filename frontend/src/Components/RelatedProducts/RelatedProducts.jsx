@@ -3,12 +3,14 @@ import Item from "../Item/Item";
 import { useEffect, useState, useContext } from "react";
 import { ShopContext } from "../../Context/ShopContext";
 
+const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
+
 function RelatedProducts({ category }) {
   const [data_product, setdata_product] = useState([]);
   const { setServerDown } = useContext(ShopContext);
 
   useEffect(() => {
-      fetch('http://localhost:4000/relatedproducts', {
+      fetch(`${API_URL}/relatedproducts`, {
           method: 'POST',
           headers: {
               Accept: 'application/json',
